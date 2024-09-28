@@ -23,3 +23,10 @@ export interface DataManagePageVO {
   /** 修改时间 */
   updateTime?: Date;
 }
+
+export interface DataManageUpdateSentiVO {
+  /** 数据ID */
+  id?: number;
+  /** 更新情感 */
+  senti?: string;
+}

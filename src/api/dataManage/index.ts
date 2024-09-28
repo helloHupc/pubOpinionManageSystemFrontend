@@ -1,5 +1,9 @@
 import request from "@/utils/request";
-import { DataManagePageQuery, DataManagePageVO } from "./model";
+import {
+  DataManagePageQuery,
+  DataManagePageVO,
+  DataManageUpdateSentiVO,
+} from "./model";
 
 class DataManageApi {
   static crawlBlogData(roleId?: number) {
@@ -17,6 +21,14 @@ class DataManageApi {
       url: `/crawler/get_blog_list`,
       method: "post",
       data: queryParams,
+    });
+  }
+
+  static updateBlogSenti(updateSentiParam?: DataManageUpdateSentiVO) {
+    return request<any, any>({
+      url: `/blog_info/update_senti`,
+      method: "post",
+      data: updateSentiParam,
     });
   }
 }

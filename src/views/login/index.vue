@@ -73,10 +73,10 @@
         </el-button>
 
         <!-- 账号密码提示 -->
-        <!-- <div class="mt-10 text-sm">
-          <span>{{ $t("login.username") }}: admin</span>
-          <span class="ml-4"> {{ $t("login.password") }}: 123456</span>
-        </div> -->
+        <div class="mt-10 text-sm">
+          <span>{{ $t("login.username") }}: test</span>
+          <span class="ml-4"> {{ $t("login.password") }}: pubAdmin123</span>
+        </div>
       </el-form>
     </el-card>
 

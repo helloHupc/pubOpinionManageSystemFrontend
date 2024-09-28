@@ -78,6 +78,19 @@
         <el-table-column label="点赞数" width="150" prop="like_count" />
         <el-table-column label="发布时间" prop="publish_time" />
         <el-table-column label="抓取时间" prop="createTime" />
+        <el-table-column fixed="right" label="操作" width="220">
+          <template #default="scope">
+            <el-button
+              type="primary"
+              size="small"
+              link
+              @click="handleEditClick(scope.row.id, scope.blog_sentiment)"
+            >
+              <i-ep-edit />
+              修改情感
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <pagination
@@ -88,6 +101,32 @@
         @pagination="handleQuery"
       />
     </el-card>
+
+    <!-- 修改情感弹框 -->
+    <el-dialog v-model="dialog.visible" :title="dialog.title" width="500px">
+      <el-form @submit.native.prevent="submitEdit">
+        <el-form-item label="正确情感">
+          <el-select
+            style="width: 200px"
+            v-model="selectedSentiment"
+            placeholder="请选择情感"
+          >
+            <el-option
+              v-for="option in sentimentOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialog.visible = false">取消</el-button>
+          <el-button type="primary" @click="submitEdit">确认</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -186,34 +225,59 @@ function handleSelectionChange(selection: any) {
   ids.value = selection.map((item: any) => item.id);
 }
 
-// 新增字典
-function handleAddClick() {
-  dialog.visible = true;
-  dialog.title = "新增字典";
-}
+// 当前选中的情感
+const selectedSentiment = ref<string>("");
+
+// 当前选中的微博ID
+const selectedId = ref<number | null>(null);
+
+// 情感选项
+const sentimentOptions = [
+  { label: "正面", value: "positive" },
+  { label: "负面", value: "negative" },
+];
 
 /**
- * 编辑字典
+ * 修改情感
  *
- * @param id 字典ID
+ * @param id 数据ID
+ * @param string 微博情感
  */
-function handleEditClick(id: number, name: string) {
+function handleEditClick(id: number, blog_sentiment: string) {
   dialog.visible = true;
-  dialog.title = "【" + name + "】字典修改";
+  dialog.title = "情感修改";
+  console.log("dialog", dialog);
+  selectedSentiment.value = blog_sentiment; // 初始化下拉框选择
+  selectedId.value = id; // 保存数据ID
 }
 
-// 提交字典表单
-function handleSubmitClick() {
-  dataFormRef.value.validate((isValid: boolean) => {
-    console.log("isValid", isValid);
-    if (isValid) {
-      loading.value = true;
-      const id = formData.id;
-      if (id) {
-      } else {
-      }
-    }
-  });
+// 提交编辑结果
+function submitEdit() {
+  // 假设此处调用接口更新情感数据
+  console.log("提交的情感为：", selectedSentiment.value);
+  console.log("提交的数据ID为：", selectedId.value);
+  if (selectedId.value === null || !selectedSentiment.value) {
+    ElMessage.error("请完整填写信息！");
+    return;
+  }
+
+  const updateSentiParam = {
+    /** 数据ID */
+    id: selectedId.value,
+    /** 更新情感 */
+    senti: selectedSentiment.value,
+  };
+
+  DataManageAPI.updateBlogSenti(updateSentiParam)
+    .then((data) => {
+      console.log("updateBlogSenti data", data);
+      ElMessage.success("情感修改成功！");
+      dialog.visible = false; // 关闭弹框
+      handleQuery();
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 }
 
 /** 关闭字典弹窗 */
@@ -224,40 +288,6 @@ function handleCloseDialog() {
   dataFormRef.value.clearValidate();
 
   formData.id = undefined;
-}
-/**
- * 删除字典
- *
- * @param id 字典ID
- */
-function handleDelete(id?: number) {
-  const attrGroupIds = [id || ids.value].join(",");
-  if (!attrGroupIds) {
-    ElMessage.warning("请勾选删除项");
-    return;
-  }
-  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(
-    () => {},
-    () => {
-      ElMessage.info("已取消删除");
-    }
-  );
-}
-
-// 新增字典
-function handleAddAttrClick() {
-  formData.dictItems = formData.dictItems ?? [];
-  formData.dictItems.push({ sort: 1, status: 1 });
-}
-// 删除字典
-function handleDeleteAttrClick(index: number) {
-  if (formData.dictItems && formData.dictItems.length > 0) {
-    formData.dictItems.splice(index, 1);
-  }
 }
 
 onMounted(() => {
