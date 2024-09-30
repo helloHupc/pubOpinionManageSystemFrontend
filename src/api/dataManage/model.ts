@@ -30,3 +30,8 @@ export interface DataManageUpdateSentiVO {
   /** 更新情感 */
   senti?: string;
 }
+
+export interface DataManageIdsVO {
+  /** 数据ID */
+  ids?: string;
+}

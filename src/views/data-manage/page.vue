@@ -42,6 +42,16 @@
     </div>
 
     <el-card shadow="never">
+      <template #header>
+        <el-button
+          type="success"
+          :disabled="ids.length === 0"
+          @click="insertDynamicDataset()"
+        >
+          <i-ep-plus />
+          加入动态数据集
+        </el-button>
+      </template>
       <el-table
         v-loading="loading"
         highlight-current-row
@@ -49,12 +59,22 @@
         border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column
+          type="selection"
+          :selectable="checkSelectable"
+          width="55"
+          align="center"
+        />
 
         <el-table-column label="关键词" width="150" prop="key_word" />
         <el-table-column label="微博ID" width="150" prop="blog_id" />
-        <el-table-column label="微博发布人" width="300" prop="author_name" />
-        <el-table-column label="微博内容" width="650" prop="blog_content" />
+        <el-table-column label="微博发布人" width="250" prop="author_name" />
+        <el-table-column
+          label="微博内容"
+          width="650"
+          prop="blog_content"
+          header-align="center"
+        />
         <el-table-column label="情感" width="100">
           <template #default="scope">
             <el-tag
@@ -75,10 +95,15 @@
             >
           </template>
         </el-table-column>
-        <el-table-column label="点赞数" width="150" prop="like_count" />
+        <el-table-column label="点赞数" width="100" prop="like_count" />
         <el-table-column label="发布时间" prop="publish_time" />
         <el-table-column label="抓取时间" prop="createTime" />
-        <el-table-column fixed="right" label="操作" width="220">
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="220"
+          header-align="center"
+        >
           <template #default="scope">
             <el-button
               type="primary"
@@ -88,6 +113,18 @@
             >
               <i-ep-edit />
               修改情感
+            </el-button>
+            <el-button
+              type="primary"
+              size="small"
+              link
+              @click="insertDynamicDataset(scope.row.id)"
+              :style="{
+                display: scope.row.is_add_dynamic_dataset == 1 ? 'none' : '',
+              }"
+            >
+              <i-ep-MagicStick />
+              加入动态数据集
             </el-button>
           </template>
         </el-table-column>
@@ -136,7 +173,11 @@ defineOptions({
   inherititems: false,
 });
 
-import { DataManagePageQuery, DataManagePageVO } from "@/api/dataManage/model";
+import {
+  DataManagePageQuery,
+  DataManagePageVO,
+  DataManageIdsVO,
+} from "@/api/dataManage/model";
 import KeyWordAPI from "@/api/keyWord";
 import DataManageAPI from "@/api/dataManage";
 
@@ -151,6 +192,10 @@ const queryParams = reactive<DataManagePageQuery>({
   pageNum: 1,
   pageSize: 10,
   keywords: null, // 初始化关键字
+});
+
+const insertDynamicDatasetParam = reactive<DataManageIdsVO>({
+  ids: "",
 });
 
 const tableData = ref<DataManagePageVO[]>();
@@ -192,6 +237,36 @@ watch(dateTimeRange, (newVal) => {
   }
 });
 
+/** 加入动态数据集 */
+function insertDynamicDataset(dataId?: number) {
+  const dataIds = [dataId || ids.value].join(",");
+  if (!dataIds) {
+    ElMessage.warning("请勾选数据项");
+    return;
+  }
+  insertDynamicDatasetParam.ids = dataIds;
+  console.log("insertDynamicDatasetParam", insertDynamicDatasetParam);
+
+  ElMessageBox.confirm("确认将已选中的数据项加入动态数据集?", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(
+    () => {
+      loading.value = true;
+      DataManageAPI.insertDynamicDataset(insertDynamicDatasetParam)
+        .then(() => {
+          ElMessage.success("加入成功");
+          handleQuery();
+        })
+        .finally(() => (loading.value = false));
+    },
+    () => {
+      ElMessage.info("已取消操作");
+    }
+  );
+}
+
 // 查询
 function handleQuery() {
   loading.value = true;
@@ -223,6 +298,10 @@ function fetchKeywordOptions() {
 // 行选择
 function handleSelectionChange(selection: any) {
   ids.value = selection.map((item: any) => item.id);
+}
+
+function checkSelectable(row: any) {
+  return row.is_add_dynamic_dataset === 0;
 }
 
 // 当前选中的情感

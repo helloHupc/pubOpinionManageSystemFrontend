@@ -3,6 +3,7 @@ import {
   DataManagePageQuery,
   DataManagePageVO,
   DataManageUpdateSentiVO,
+  DataManageIdsVO,
 } from "./model";
 
 class DataManageApi {
@@ -29,6 +30,14 @@ class DataManageApi {
       url: `/blog_info/update_senti`,
       method: "post",
       data: updateSentiParam,
+    });
+  }
+
+  static insertDynamicDataset(insertDynamicDatasetParam?: DataManageIdsVO) {
+    return request<any, any>({
+      url: `/blog_info/insert_to_dynamic_dataset`,
+      method: "post",
+      data: insertDynamicDatasetParam,
     });
   }
 }
