@@ -2,7 +2,12 @@
 <template>
   <div class="app-container">
     <div class="search-container">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+      <el-form
+        ref="queryFormRef"
+        :model="queryParams"
+        :inline="true"
+        :style="{ height: '45px' }"
+      >
         <el-form-item label="关键词" prop="name">
           <el-select
             v-model="queryParams.keywords"
@@ -62,20 +67,20 @@
         <el-table-column
           type="selection"
           :selectable="checkSelectable"
-          width="55"
+          width="50"
           align="center"
         />
 
-        <el-table-column label="关键词" width="150" prop="key_word" />
-        <el-table-column label="微博ID" width="150" prop="blog_id" />
-        <el-table-column label="微博发布人" width="250" prop="author_name" />
+        <el-table-column label="关键词" width="100" prop="key_word" />
+        <el-table-column label="微博ID" width="100" prop="blog_id" />
+        <el-table-column label="微博发布人" width="100" prop="author_name" />
         <el-table-column
           label="微博内容"
-          width="650"
+          width="386"
           prop="blog_content"
           header-align="center"
         />
-        <el-table-column label="情感" width="100">
+        <el-table-column label="情感" width="70">
           <template #default="scope">
             <el-tag
               :type="
@@ -86,7 +91,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="微博地址" width="200">
+        <el-table-column label="微博地址" width="130">
           <template #default="scope">
             <el-button type="primary" size="small"
               ><a :href="scope.row.blog_url" target="_blank"
@@ -95,9 +100,9 @@
             >
           </template>
         </el-table-column>
-        <el-table-column label="点赞数" width="100" prop="like_count" />
-        <el-table-column label="发布时间" prop="publish_time" />
-        <el-table-column label="抓取时间" prop="createTime" />
+        <el-table-column label="点赞数" width="150" prop="like_count" />
+        <el-table-column label="发布时间" prop="publish_time" width="250" />
+        <el-table-column label="抓取时间" prop="createTime" width="250" />
         <el-table-column
           fixed="right"
           label="操作"
@@ -376,9 +381,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.el-form--inline .el-form-item {
-  margin-top: 18px;
-}
 .keyword-select {
   width: 300px; /* 你可以调整这个宽度 */
 }

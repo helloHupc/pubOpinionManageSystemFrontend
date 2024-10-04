@@ -41,20 +41,24 @@
         border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="关键词名称" prop="key_word" min-width="150" />
-        <el-table-column label="关键词描述" prop="description" width="950" />
-        <el-table-column label="添加人" prop="nickname" width="150" />
-        <el-table-column label="添加时间" prop="createTime" width="250" />
+        <el-table-column type="selection" min-width="5%" align="center" />
+        <el-table-column label="关键词名称" prop="key_word" min-width="10%" />
+        <el-table-column
+          label="关键词描述"
+          prop="description"
+          min-width="15%"
+        />
+        <el-table-column label="添加人" prop="nickname" min-width="10%" />
+        <el-table-column label="添加时间" prop="createTime" min-width="15%" />
 
-        <el-table-column label="状态" align="center" width="200">
+        <el-table-column label="状态" align="center" min-width="5%">
           <template #default="scope">
             <el-tag v-if="scope.row.status === 1" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column fixed="right" label="操作" width="220">
+        <el-table-column fixed="right" label="操作" min-width="20%">
           <template #default="scope">
             <el-button
               type="primary"

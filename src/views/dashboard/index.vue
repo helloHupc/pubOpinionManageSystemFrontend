@@ -77,7 +77,7 @@
 
     <!-- Echarts 图表 -->
     <el-row :gutter="10" class="mt-5">
-      <el-col :xs="24" :span="16">
+      <el-col :xs="20" :span="16">
         <el-card>
           <div
             ref="weiboTotal"
@@ -87,7 +87,7 @@
           ></div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :span="8">
+      <el-col :xs="12" :span="8">
         <el-card>
           <div
             ref="weiboSentiment"

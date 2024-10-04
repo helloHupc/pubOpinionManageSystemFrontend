@@ -41,7 +41,7 @@ export const useUserStore = defineStore("user", () => {
   function getUserInfo() {
     return new Promise<UserInfo>((resolve, reject) => {
       // 从 localStorage 中获取 userId
-      const userId = localStorage.getItem("userId");
+      const userId = localStorage.getItem(USER_TOKEN_KEY);
 
       if (!userId) {
         reject("User ID is not found.");

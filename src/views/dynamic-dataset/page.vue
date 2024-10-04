@@ -2,7 +2,12 @@
 <template>
   <div class="app-container">
     <div class="search-container">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+      <el-form
+        ref="queryFormRef"
+        :model="queryParams"
+        :inline="true"
+        :style="{ height: '45px' }"
+      >
         <el-form-item label="添加时间">
           <el-date-picker
             class="!w-[240px]"
@@ -51,7 +56,7 @@
         />
 
         <el-table-column label="微博ID" width="200" prop="blog_id" />
-        <el-table-column label="微博内容" width="1550" prop="blog_content" />
+        <el-table-column label="微博内容" width="550" prop="blog_content" />
         <el-table-column label="情感" width="150">
           <template #default="scope">
             <el-tag
@@ -63,7 +68,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="加入时间" prop="createTime" />
+        <el-table-column label="加入时间" prop="createTime" width="250" />
       </el-table>
 
       <pagination
@@ -172,10 +177,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.el-form--inline .el-form-item {
-  margin-top: 18px;
-}
 .keyword-select {
-  width: 300px; /* 你可以调整这个宽度 */
+  width: 150px; /* 你可以调整这个宽度 */
 }
 </style>
